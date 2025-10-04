@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 
-const Edit = ({ employees, selectedEmployee, setEmployees, setIsEditing }) => {
+// ✨ props로 handleUpdate를 받고, employees와 setEmployees는 제거합니다.
+const Edit = ({ selectedEmployee, handleUpdate, setIsEditing }) => {
   const id = selectedEmployee.id;
 
   const [firstName, setFirstName] = useState(selectedEmployee.firstName);
@@ -10,7 +11,7 @@ const Edit = ({ employees, selectedEmployee, setEmployees, setIsEditing }) => {
   const [salary, setSalary] = useState(selectedEmployee.salary);
   const [date, setDate] = useState(selectedEmployee.date);
 
-  const handleUpdate = e => {
+  const onFormSubmit = e => { // ✨ 함수 이름을 onFormSubmit으로 변경하여 명확하게 합니다.
     e.preventDefault();
 
     if (!firstName || !lastName || !email || !salary || !date) {
@@ -22,7 +23,7 @@ const Edit = ({ employees, selectedEmployee, setEmployees, setIsEditing }) => {
       });
     }
 
-    const employee = {
+    const updatedEmployee = {
       id,
       firstName,
       lastName,
@@ -30,30 +31,17 @@ const Edit = ({ employees, selectedEmployee, setEmployees, setIsEditing }) => {
       salary,
       date,
     };
-
-    for (let i = 0; i < employees.length; i++) {
-      if (employees[i].id === id) {
-        employees.splice(i, 1, employee);
-        break;
-      }
-    }
-
-    localStorage.setItem('employees_data', JSON.stringify(employees));
-    setEmployees(employees);
-    setIsEditing(false);
-
-    Swal.fire({
-      icon: 'success',
-      title: 'Updated!',
-      text: `${employee.firstName} ${employee.lastName}'s data has been updated.`,
-      showConfirmButton: false,
-      timer: 1500,
-    });
+    
+    // ✨ 부모 컴포넌트의 handleUpdate 함수를 호출합니다.
+    handleUpdate(updatedEmployee);
   };
+
+  // ⛔️ 기존의 fetch 로직을 모두 삭제했습니다.
 
   return (
     <div className="small-container">
-      <form onSubmit={handleUpdate}>
+      {/* ✨ form의 onSubmit 이벤트를 onFormSubmit 함수와 연결합니다. */}
+      <form onSubmit={onFormSubmit}>
         <h1>Edit Employee</h1>
         <label htmlFor="firstName">First Name</label>
         <input

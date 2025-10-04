@@ -378,7 +378,7 @@ html {
 }
 
 body {
-  color: #404040;
+  color: green;
   background: white;
   font-size: 1rem;
 }
@@ -794,7 +794,7 @@ button,
   display: inline-block;
   border: 1px solid #0366ee;
   border-radius: 4px;
-  background: #0366ee;
+  background: red;
   color: #ffffff;
   font-weight: 600;
   font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, Helvetica,

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 
-const Add = ({ employees, setEmployees, setIsAdding }) => {
+const Add = ({ setIsAdding, fetchEmployees }) => { // props 수정
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -20,9 +20,7 @@ const Add = ({ employees, setEmployees, setIsAdding }) => {
       });
     }
 
-    const id = employees.length + 1;
     const newEmployee = {
-      id,
       firstName,
       lastName,
       email,
@@ -30,20 +28,36 @@ const Add = ({ employees, setEmployees, setIsAdding }) => {
       date,
     };
 
-    employees.push(newEmployee);
-    localStorage.setItem('employees_data', JSON.stringify(employees));
-    setEmployees(employees);
-    setIsAdding(false);
+    const API_URL = 'https://68db332b23ebc87faa323c66.mockapi.io/employeesData';
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Added!',
-      text: `${firstName} ${lastName}'s data has been Added.`,
-      showConfirmButton: false,
-      timer: 1500,
-    });
+    fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newEmployee),
+    })
+      .then(res => {
+        if(res.ok) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Added!',
+            text: `${firstName} ${lastName}'s data has been Added.`,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          // ✨ 추가 성공 후, 최신 데이터 목록을 다시 불러옵니다.
+          fetchEmployees();
+        } else {
+          throw new Error('Add failed on server.');
+        }
+      })
+      .catch(error => console.error('Error adding data:', error));
+      
+    setIsAdding(false);
   };
 
+  // ... (return JSX 부분은 동일)
   return (
     <div className="small-container">
       <form onSubmit={handleAdd}>

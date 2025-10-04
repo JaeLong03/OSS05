@@ -6,25 +6,67 @@ import Table from './Table';
 import Add from './Add';
 import Edit from './Edit';
 
-import { employeesData } from '../../data';
-
 const Dashboard = ({ setIsAuthenticated }) => {
-  const [employees, setEmployees] = useState(employeesData);
+  const [employees, setEmployees] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
+  const API_URL = 'https://68db332b23ebc87faa323c66.mockapi.io/employeesData';
+
+  const fetchEmployees = () => {
+    fetch(API_URL)
+      .then(res => res.json())
+      .then(data => setEmployees(data))
+      .catch(error => console.error('Error fetching data:', error));
+  };
+
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem('employees_data'));
-    if (data !== null && Object.keys(data).length !== 0) setEmployees(data);
+    fetchEmployees();
   }, []);
 
   const handleEdit = id => {
     const [employee] = employees.filter(employee => employee.id === id);
-
     setSelectedEmployee(employee);
     setIsEditing(true);
   };
+
+  // ✨ Edit 컴포넌트에서 사용할 handleUpdate 함수를 추가합니다.
+  const handleUpdate = (updatedEmployee) => {
+    fetch(`${API_URL}/${updatedEmployee.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedEmployee),
+    })
+      .then(res => {
+        if (res.ok) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Updated!',
+            text: `${updatedEmployee.firstName} ${updatedEmployee.lastName}'s data has been updated.`,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          fetchEmployees();
+        } else {
+           throw new Error('Update failed on server.');
+        }
+      })
+      .catch(error => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: '데이터 수정 중 오류가 발생했습니다.',
+          showConfirmButton: true,
+        });
+        console.error('Error updating data:', error);
+      });
+      
+    setIsEditing(false);
+  };
+
 
   const handleDelete = id => {
     Swal.fire({
@@ -36,19 +78,30 @@ const Dashboard = ({ setIsAuthenticated }) => {
       cancelButtonText: 'No, cancel!',
     }).then(result => {
       if (result.value) {
-        const [employee] = employees.filter(employee => employee.id === id);
-
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: `${employee.firstName} ${employee.lastName}'s data has been deleted.`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-
-        const employeesCopy = employees.filter(employee => employee.id !== id);
-        localStorage.setItem('employees_data', JSON.stringify(employeesCopy));
-        setEmployees(employeesCopy);
+        fetch(`${API_URL}/${id}`, { method: 'DELETE' })
+          .then(res => {
+            if (res.ok) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Deleted!',
+                text: '데이터가 성공적으로 삭제되었습니다.',
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              fetchEmployees();
+            } else {
+              throw new Error('Deletion failed on server.');
+            }
+          })
+          .catch(error => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: '데이터 삭제 중 오류가 발생했습니다.',
+              showConfirmButton: true,
+            });
+            console.error('Error deleting data:', error);
+          });
       }
     });
   };
@@ -73,13 +126,13 @@ const Dashboard = ({ setIsAuthenticated }) => {
           employees={employees}
           setEmployees={setEmployees}
           setIsAdding={setIsAdding}
+          fetchEmployees={fetchEmployees} // Add 컴포넌트에도 fetchEmployees를 전달
         />
       )}
       {isEditing && (
         <Edit
-          employees={employees}
           selectedEmployee={selectedEmployee}
-          setEmployees={setEmployees}
+          handleUpdate={handleUpdate} // ✨ handleUpdate 함수를 prop으로 전달
           setIsEditing={setIsEditing}
         />
       )}

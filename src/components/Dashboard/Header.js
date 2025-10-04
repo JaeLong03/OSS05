@@ -5,7 +5,7 @@ import Logout from '../Logout';
 const Header = ({ setIsAdding, setIsAuthenticated }) => {
   return (
     <header>
-      <h1>Employee Management Software</h1>
+      <h1>직원 관리 소프트웨어</h1>
       <div style={{ marginTop: '30px', marginBottom: '18px' }}>
         <button onClick={() => setIsAdding(true)}>Add Employee</button>
         <Logout setIsAuthenticated={setIsAuthenticated} />

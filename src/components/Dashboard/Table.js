@@ -1,9 +1,7 @@
 import React from 'react';
 
 const Table = ({ employees, handleEdit, handleDelete }) => {
-  employees.forEach((employee, i) => {
-    employee.id = i + 1;
-  });
+  // ⛔️ ID를 덮어쓰던 forEach 구문을 삭제했습니다.
 
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -30,7 +28,9 @@ const Table = ({ employees, handleEdit, handleDelete }) => {
         <tbody>
           {employees.length > 0 ? (
             employees.map((employee, i) => (
+              // ✨ key와 버튼 핸들러에는 MockAPI의 고유 ID를 사용합니다.
               <tr key={employee.id}>
+                {/* 화면에 보이는 번호는 인덱스(i)를 사용합니다. */}
                 <td>{i + 1}</td>
                 <td>{employee.firstName}</td>
                 <td>{employee.lastName}</td>
@@ -39,6 +39,7 @@ const Table = ({ employees, handleEdit, handleDelete }) => {
                 <td>{employee.date} </td>
                 <td className="text-right">
                   <button
+                    // ✨ 올바른 고유 id를 전달합니다.
                     onClick={() => handleEdit(employee.id)}
                     className="button muted-button"
                   >
@@ -47,6 +48,7 @@ const Table = ({ employees, handleEdit, handleDelete }) => {
                 </td>
                 <td className="text-left">
                   <button
+                    // ✨ 올바른 고유 id를 전달합니다.
                     onClick={() => handleDelete(employee.id)}
                     className="button muted-button"
                   >
