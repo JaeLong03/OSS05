@@ -794,7 +794,7 @@ button,
   display: inline-block;
   border: 1px solid #0366ee;
   border-radius: 4px;
-  background: green;
+  background: red;
   color: #ffffff;
   font-weight: 600;
   font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, Helvetica,
@@ -871,7 +871,7 @@ a.accent-button:active {
 .muted-button,
 a.muted-button {
   background: transparent;
-  background-color : red; 
+  background-color : lightyellow; 
   border: 1px solid #cdcdcd;
   color: #4e4e4e;
 }
