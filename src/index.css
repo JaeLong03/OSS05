@@ -871,7 +871,7 @@ a.accent-button:active {
 .muted-button,
 a.muted-button {
   background: transparent;
-  background-color : lightyellow; 
+  background-color : red; 
   border: 1px solid #cdcdcd;
   color: #4e4e4e;
 }
