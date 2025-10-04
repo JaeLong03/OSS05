@@ -69,6 +69,7 @@ const Add = ({ setIsAdding, fetchEmployees }) => { // props 수정
           name="firstName"
           value={firstName}
           onChange={e => setFirstName(e.target.value)}
+          required
         />
         <label htmlFor="lastName">Last Name</label>
         <input
@@ -77,6 +78,7 @@ const Add = ({ setIsAdding, fetchEmployees }) => { // props 수정
           name="lastName"
           value={lastName}
           onChange={e => setLastName(e.target.value)}
+          required
         />
         <label htmlFor="email">Email</label>
         <input
@@ -85,6 +87,7 @@ const Add = ({ setIsAdding, fetchEmployees }) => { // props 수정
           name="email"
           value={email}
           onChange={e => setEmail(e.target.value)}
+          required
         />
         <label htmlFor="salary">Salary ($)</label>
         <input
@@ -93,6 +96,7 @@ const Add = ({ setIsAdding, fetchEmployees }) => { // props 수정
           name="salary"
           value={salary}
           onChange={e => setSalary(e.target.value)}
+          required
         />
         <label htmlFor="date">Date</label>
         <input
@@ -101,6 +105,7 @@ const Add = ({ setIsAdding, fetchEmployees }) => { // props 수정
           name="date"
           value={date}
           onChange={e => setDate(e.target.value)}
+          required
         />
         <div style={{ marginTop: '30px' }}>
           <input type="submit" value="Add" />
